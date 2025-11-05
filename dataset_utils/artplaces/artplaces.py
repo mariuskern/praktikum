@@ -118,3 +118,44 @@ class ArtPlaces(AbstractArtPlaces):
             indices = indices + random.sample(range(start, end+1), min(num, (end+1)-start))
         
         return data.Subset(self, indices)
+
+class ArtPlacesTimesN(AbstractArtPlaces):
+    def __init__(self, n, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.n = n
+
+    def __len__(self):
+        return self.len * self.n
+    
+    def __getitem__(self, index):
+        index = index % self.len
+
+        image_path, label = self.imgs[index]
+        image = Image.open(os.path.abspath(image_path)).convert("RGB")
+
+        if self.transform is not None:
+            image = self.transform(image)
+
+        return image, label
+    
+    def getSubset(self, image_num, classes=None):
+        if classes == None:
+            indices = random.sample(range(0, self.__len__()), min(image_num, self.__len__()))
+            return data.Subset(self, indices)
+
+        a = image_num // len(classes)
+        b = image_num % len(classes)
+        images_per_class = [a for _ in range(len(classes) - 1)] + [a + b]
+
+        indices = []
+
+        for l, num in zip(classes, images_per_class):
+            if isinstance(l, int):
+                l = self.idx_to_class[l]
+            start, end = self.class_to_idxs[l]["start"], self.class_to_idxs[l]["end"]
+            if start is None or end is None:
+                continue
+            indices = indices + random.sample(range(start, end+1), min(num, (end+1)-start))
+        
+        return data.Subset(self, indices)
