@@ -1,6 +1,5 @@
-from builder import MoCo as MoCo_facebook
+from .builder import MoCo as MoCo_facebook
 import torch
-import torchvision.models as models
 import torch.nn as nn
 
 import sys

@@ -1,5 +1,7 @@
 DEST = r"C:\Users\mariu\Documents\Studium\Praktikum\Evaluation"
 
+DISTANCE = "cosine"
+
 K = [1, 5, 10, 15, 20, 50]
 # K = [1, 5]
 
@@ -26,44 +28,29 @@ MODELS = [
         "weights_pretrained": "MOCO",
         "weights_trained": None,
         "dim": 128,
+        "K": 65536,
         "dataset": ["ImageNet", "Places365", "ArtPlaces"]
     },
-    # {
-    #     "name": "MoCo (resnet50, dim=128, trained on Places365)",
-    #     "architecture": "MoCo",
-    #     "model": "resnet50",
-    #     "weights_pretrained": None,
-    #     "weights_trained": r"C:\Users\mariu\Documents\Studium\Praktikum\Gewichte\moco\resnet50_places365_20250916_210328\state_dict_199.pt",
-    #     "dim": 128,
-    #     "dataset": ["Places365"]
-    # },
-    # {
-    #     "name": "MoCo (resnet50, dim=128, finetuned on Places365 (MoCo weights))",
-    #     "architecture": "MoCo",
-    #     "model": "resnet50",
-    #     "weights_pretrained": None,
-    #     "weights_trained": r"C:\Users\mariu\Documents\Studium\Praktikum\Gewichte\moco\resnet50_places365_20250917_173142\state_dict_199.pt",
-    #     "dim": 128,
-    #     "dataset": ["Places365"]
-    # },
-    # {
-    #     "name": "MoCo (resnet18, dim=1000, finetuned on Places365 (ImageNet weights))",
-    #     "architecture": "MoCo",
-    #     "model": "resnet18",
-    #     "weights_pretrained": None,
-    #     "weights_trained": r"C:\Users\mariu\Documents\Studium\Praktikum\Gewichte\moco\resnet18_places365_20250918_133625\state_dict_99.pt",
-    #     "dim": 1000,
-    #     "dataset": ["Places365"]
-    # },
-    # {
-    #     "name": "MoCo (resnet50, dim=1000, finetuned on Places365 (ImageNet weights))",
-    #     "architecture": "MoCo",
-    #     "model": "resnet50",
-    #     "weights_pretrained": None,
-    #     "weights_trained": r"C:\Users\mariu\Documents\Studium\Praktikum\Gewichte\moco\resnet50_places365_20250918_201150\state_dict_139.pt",
-    #     "dim": 1000,
-    #     "dataset": ["Places365"]
-    # },
+    {
+        "name": "MoCo (resnet50, dim=128, trained on Places365)",
+        "architecture": "MoCo",
+        "model": "resnet50",
+        "weights_pretrained": None,
+        "weights_trained": r"C:\Users\mariu\Documents\Studium\Praktikum\Gewichte\moco\resnet50_places365_20250917_173142\state_dict_199.pt",
+        "dim": 128,
+        "K": 65536,
+        "dataset": ["Places365", "ArtPlaces"]
+    },
+    {
+        "name": "MoCo (resnet50, dim=128, trained on ArtPlaces)",
+        "architecture": "MoCo",
+        "model": "resnet50",
+        "weights_pretrained": None,
+        "weights_trained": r"C:\Users\mariu\Documents\Studium\Praktikum\Gewichte\moco\resnet50_artplacestimesn_20251105_221352\state_dict_120.pt",
+        "dim": 128,
+        "K": 4544,
+        "dataset": ["ArtPlaces"]
+    },
     {
         "name": "DINO_v2 (vitb14, pretrained)",
         "architecture": "DINO_v2",
