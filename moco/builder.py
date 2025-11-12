@@ -20,6 +20,7 @@ class MoCo(nn.Module):
         self,
         model="resnet50",
         weights=None,
+        layers_to_train=None,
         dim: int = 128,
         K: int = 65536,
         m: float = 0.999,
@@ -52,6 +53,10 @@ class MoCo(nn.Module):
             self.encoder_k.fc = nn.Sequential(
                 nn.Linear(dim_mlp, dim_mlp), nn.ReLU(), self.encoder_k.fc
             )
+        
+        for index, (name, param) in enumerate(self.encoder_q.named_parameters()):
+            if layers_to_train is not None and index not in layers_to_train and name not in layers_to_train: # not any(layer in name for layer in layers_to_train)
+                param.requires_grad = False
 
         for param_q, param_k in zip(
             self.encoder_q.parameters(), self.encoder_k.parameters()
