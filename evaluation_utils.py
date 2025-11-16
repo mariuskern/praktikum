@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 from collections import Counter
+from sklearn.metrics import confusion_matrix
 
 from perceptual_loss import ResNet18PerceptualLoss
 from siamese_network import ResNet18SiameseNetwork
@@ -57,13 +58,18 @@ def calculate_accuracy(I, labels, k):
 
     predictions_labels = labels[I]
     predictions = np.array([Counter(i).most_common(1)[0][0] for i in predictions_labels])
-    matches = predictions == labels
+    
+    # matches = predictions == labels
+    # correct = matches.sum()
+    # all_predictions = matches.size
+    # accuracy2 = correct / all_predictions
 
-    correct = matches.sum()
-    all_predictions = matches.size
-    accuracy = correct / all_predictions
+    overall_accuracy = np.mean(predictions == labels)
 
-    return accuracy
+    matrix = confusion_matrix(labels, predictions)
+    accuracy = matrix.diagonal()/matrix.sum(axis=1)
+
+    return overall_accuracy, accuracy.mean(), accuracy.std(), accuracy.tolist(), matrix.tolist()
 
 def calculate_precision(I, labels, k):
     I = I[:, :k]
@@ -72,8 +78,10 @@ def calculate_precision(I, labels, k):
     predictions = np.array([Counter(i).most_common(1)[0][0] for i in predictions_labels])
     tp, fp, _, _ = confusion_per_class(predictions, labels)
 
+    matrix = confusion_matrix(labels, predictions)
+
     precision = tp / (tp + fp + 1e-8)
-    return precision.mean()
+    return precision.mean(), precision.std(), precision.tolist(), matrix.tolist()
 
 def calculate_recall(I, labels, k):
     I = I[:, :k]
@@ -82,8 +90,10 @@ def calculate_recall(I, labels, k):
     predictions = np.array([Counter(i).most_common(1)[0][0] for i in predictions_labels])
     tp, _, _, fn = confusion_per_class(predictions, labels)
 
+    matrix = confusion_matrix(labels, predictions)
+
     recall = tp / (tp + fn + 1e-8)
-    return recall.mean()
+    return recall.mean(), recall.std(), recall.tolist(), matrix.tolist()
 
 def confusion_per_class(predictions, labels):
     num_classes = max(labels.max(), predictions.max()) + 1
