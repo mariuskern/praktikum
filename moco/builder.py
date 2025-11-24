@@ -55,7 +55,7 @@ class MoCo(nn.Module):
             )
         
         for index, (name, param) in enumerate(self.encoder_q.named_parameters()):
-            if layers_to_train is not None and index not in layers_to_train and name not in layers_to_train: # not any(layer in name for layer in layers_to_train)
+            if layers_to_train is not None and index not in layers_to_train and name not in layers_to_train and not any(layer in name for layer in layers_to_train):
                 param.requires_grad = False
 
         for param_q, param_k in zip(

@@ -11,6 +11,10 @@ from clip_model import CLIP
 
 
 def create_model(model_info, device=torch.device("cuda" if torch.cuda.is_available() else "cpu")):
+    """
+    Create and return a model based on the provided model information.
+    """
+
     match model_info["architecture"]:
         case "ResNet18PerceptualLoss":
             model = ResNet18PerceptualLoss()
@@ -38,6 +42,10 @@ def create_model(model_info, device=torch.device("cuda" if torch.cuda.is_availab
     return model
 
 def extract_features(model, dataloader, device=torch.device("cuda" if torch.cuda.is_available() else "cpu")):
+    """
+    Extract features and labels from the dataloader using the provided model.
+    """
+
     features = []
     labels = []
 
@@ -54,6 +62,10 @@ def extract_features(model, dataloader, device=torch.device("cuda" if torch.cuda
     return features, labels
 
 def calculate_accuracy(I, labels, k):
+    """
+    Calculate overall accuracy and per-class accuracy.
+    """
+
     I = I[:, :k]
 
     predictions_labels = labels[I]
@@ -72,6 +84,10 @@ def calculate_accuracy(I, labels, k):
     return overall_accuracy, accuracy.mean(), accuracy.std(), accuracy.tolist(), matrix.tolist()
 
 def calculate_precision(I, labels, k):
+    """
+    Calculate per-class precision.
+    """
+
     I = I[:, :k]
 
     predictions_labels = labels[I]
@@ -84,6 +100,10 @@ def calculate_precision(I, labels, k):
     return precision.mean(), precision.std(), precision.tolist(), matrix.tolist()
 
 def calculate_recall(I, labels, k):
+    """
+    Calculate per-class recall.
+    """
+
     I = I[:, :k]
 
     predictions_labels = labels[I]
@@ -96,6 +116,10 @@ def calculate_recall(I, labels, k):
     return recall.mean(), recall.std(), recall.tolist(), matrix.tolist()
 
 def confusion_per_class(predictions, labels):
+    """
+    Helper method to compute true positives, false positives, true negatives, and false negatives per class.
+    """
+
     num_classes = max(labels.max(), predictions.max()) + 1
     tp = np.zeros(num_classes, dtype=int)
     fp = np.zeros(num_classes, dtype=int)
