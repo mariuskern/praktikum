@@ -45,11 +45,26 @@ class MoCo(torch.nn.Module):
     def forward(self, im_q, im_k=None):
         if self.transform is not None:
             im_q = self.transform(im_q)
+            if im_k is not None:
+                im_k = self.transform(im_k)
         
         if im_k is None: # if self.training == False:
             with torch.no_grad():
                 im_q = self.moco.encoder_q(im_q)
                 im_q = nn.functional.normalize(im_q, dim=1)
+
+                # im_q = self.moco.encoder_q(im_q)
+
+                # layers = list(self.moco.encoder_q.children())
+                # backbone = nn.Sequential(*layers[:-1])
+                # im_q = backbone(im_q)
+                # im_q = torch.flatten(im_q, start_dim=1)
+                # im_q = nn.functional.normalize(im_q, dim=1)
+
+                # layers = list(self.moco.encoder_q.children())
+                # backbone = nn.Sequential(*layers[:-1])
+                # im_q = backbone(im_q)
+                # im_q = torch.flatten(im_q, start_dim=1)
             return im_q
         
         output, target = self.moco(im_q=im_q, im_k=im_k)

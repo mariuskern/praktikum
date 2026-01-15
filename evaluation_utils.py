@@ -27,6 +27,7 @@ def create_model(model_info, device=torch.device("cuda" if torch.cuda.is_availab
                 weights=model_info["weights_pretrained"],
                 dim=model_info["dim"],
                 K=model_info["K"],
+                mlp=model_info["mlp"]
             )
             if model_info["weights_trained"] is not None:
                 model.load_state_dict(torch.load(model_info["weights_trained"], weights_only=True))
